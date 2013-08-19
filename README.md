@@ -1,4 +1,10 @@
-#ExpressionEngine Twitter
+# ExpressionEngine Twitter
+
+# Note
+
+This is a fork of [EE_Twitter](https://github.com/click-rain/EE_Twitter) intended for use with my [ExpressionEngine themes](http://themes.bybjorn.com).
+
+## ExpressionEngine Twitter
 
 ExpressionEngine Twitter is nearly an identical port of EllisLabs Twitter Timeline plugin, via Bryant Hughes's [TGL_Twitter](https://github.com/bryantAXS/TGL_Twitter). However ExpressionEngine Twitter has a CP Backend, allowing a user to authenticate with Twitter using oAuth.
 

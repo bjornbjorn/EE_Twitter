@@ -8,10 +8,12 @@ require_once PATH_THIRD.'twitter/classes/twitteroauth.php';
  * This is an improvement on TGL_Twitter (https://github.com/bryantAXS/TGL_Twitter) which was an improvement on Ellislabs Twitter Timeline
  * (http://expressionengine.com/downloads/details/twitter_timeline/). Twitter supports Twitter's API version 1.1 using oAuth.
  *
+ * Forked here: https://github.com/bjornbjorn/EE_Twitter
+ *
  * @package default
  * @author Derek Jones
  * @author Bryant Hughes
- * @author Bryan Burgers
+ * @author Bjørn Børresen
  */
 
 class Twitter
@@ -68,6 +70,18 @@ class Twitter
 		$this->use_stale	= $this->EE->TMPL->fetch_param('use_stale_cache', 'yes');
 		$this->target		= $this->EE->TMPL->fetch_param('target', '');
 		$screen_name		= $this->EE->TMPL->fetch_param('screen_name');
+
+        // screen name not provided, collect from theme global var
+        if(!$screen_name) {
+            $u = $this->EE->db->get_where('global_variables', array('site_id' => $this->EE->config->item('site_id'), 'variable_name' => 'woo_twitter_username'));
+            if($u->num_rows() > 0) {
+                $screen_name = $u->row('variable_data');
+            }
+        }
+
+
+
+
 		$prefix				= $this->EE->TMPL->fetch_param('prefix', '');
 		$userprefix			= $this->EE->TMPL->fetch_param('userprefix', NULL);
 		$include_rts		= ($this->EE->TMPL->fetch_param('retweets', 'yes') == 'yes') ? TRUE : FALSE;
