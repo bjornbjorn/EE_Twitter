@@ -65,22 +65,30 @@ class Twitter
 	{
 		// Fetch parameters
 		$this->refresh		= $this->EE->TMPL->fetch_param('twitter_refresh', $this->refresh);
-		$this->limit		= $this->EE->TMPL->fetch_param('limit', $this->limit);
+		$this->limit		= $this->EE->TMPL->fetch_param('limit');
 		$count              = $this->EE->TMPL->fetch_param('count');
 		$this->use_stale	= $this->EE->TMPL->fetch_param('use_stale_cache', 'yes');
 		$this->target		= $this->EE->TMPL->fetch_param('target', '');
 		$screen_name		= $this->EE->TMPL->fetch_param('screen_name');
 
         // screen name not provided, collect from theme global var
-        if(!$screen_name) {
-            $u = $this->EE->db->get_where('global_variables', array('site_id' => $this->EE->config->item('site_id'), 'variable_name' => 'woo_twitter_username'));
+        if(!$screen_name || !$this->limit) {
+
+            $this->EE->db->from('global_variables');
+            $this->EE->db->where('variable_name', 'woo_twitter_username');
+            $this->EE->db->or_where('variable_name', 'woo_num_tweets');
+            $u = $this->EE->db->get();
+
             if($u->num_rows() > 0) {
-                $screen_name = $u->row('variable_data');
+                foreach($u->result() as $tweet_config) {
+                    if($tweet_config->variable_name == 'woo_twitter_username' && !$screen_name) {
+                        $screen_name = $tweet_config->variable_data;
+                    } else if($tweet_config->variable_name = 'woo_num_tweets' && !$this->limit) {
+                        $this->limit = $tweet_config->variable_data;
+                    }
+                }
             }
         }
-
-
-
 
 		$prefix				= $this->EE->TMPL->fetch_param('prefix', '');
 		$userprefix			= $this->EE->TMPL->fetch_param('userprefix', NULL);
